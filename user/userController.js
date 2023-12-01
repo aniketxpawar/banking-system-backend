@@ -13,7 +13,7 @@ const login = async (req,res) => {
         const token = await jwt.sign({ id: user._id, email }, process.env.JWT_KEY, {
             expiresIn: "2d",
           })
-        res.status(200).json({message:"Login Successful",token})
+        res.status(200).json({message:"Login Successful",token, userId: user._id})
     }catch(err){
         console.log(err)
         res.status(500).json({message:"Internal Server Error"})
@@ -23,9 +23,7 @@ const login = async (req,res) => {
 const getTransactions = async(req,res) => {
     try{
         const {id} = req.params;
-        console.log(id) 
         const transactions = await Accounts.find({userId:new ObjectId(id)})
-        console.log(transactions)
         if(transactions.length == 0) return res.status(404).json({message:"No Transactions"})
 
         res.status(200).json(transactions)
@@ -35,4 +33,31 @@ const getTransactions = async(req,res) => {
     }
 }
 
-module.exports = {login, getTransactions}
+const transaction = async(req,res) => {
+    try{
+        const {userId, amount, type} = req.body
+        const user = await users.findById(userId)        
+        if(type=='Deposit') {
+            await Accounts.create({userId, type, amount})
+            user.balance = user.balance + amount;
+            await user.save();
+            return res.status(200).json({message:`Amount Rs.${amount} Deposited`})
+        }
+        else if(type=='Withdrawal'){
+            if(user.balance < amount) return res.status(400).json({message: "Insufficient Funds"})
+            await Accounts.create({userId, type, amount})
+            user.balance = user.balance + amount;
+            await user.save();
+            return res.status(200).json({message:`Amount Rs.${amount} Withdrawn`})
+        }
+        else{
+            return res.status(400).json({message: "Invalid Type"})
+        }
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message:"Internal Server Error"})
+    }
+}
+
+module.exports = {login, getTransactions, transaction}
