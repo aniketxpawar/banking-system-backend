@@ -15,3 +15,13 @@ git clone https://github.com/aniketxpawar/banking-system-backend.git
 ### `npm start`
 
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+## Credentials for Login
+
+### `User`
+email: aniket@gmail.com
+password: 12345678
+
+### `Banker`
+email: admin@gmail.com
+password: 12345678
