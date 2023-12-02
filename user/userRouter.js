@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login',userController.login)
-router.get('/getTransactions/:id',userController.getTransactions)
+router.get('/getTransactions/:userId',userController.getTransactions)
 router.post('/transaction',userController.transaction)
-
+router.get('/getBalance/:userId',userController.getBalance)
 module.exports = router;

@@ -8,7 +8,7 @@ const accountsSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['Deposit', 'Withdrawal'], // Assuming transaction types can be Deposit or Withdrawal
+    enum: ['Deposit', 'Withdraw'], // Assuming transaction types can be Deposit or Withdrawal
     required: true
   },
   amount: {
